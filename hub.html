@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Election Data Hub — State Assembly Financial Tracker</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root {
+    --accent: #2563EB;
+    --accent-dark: #1D4ED8;
+    --accent-glow: rgba(37, 99, 235, 0.15);
+    --live: #1D4ED8;
+    --live-hover: #2563EB;
+    --live-light: #EFF6FF;
+    --pending: #CBD5E1;
+    --pending-hover: #94A3B8;
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --border: #E2E8F0;
+    --text: #0F172A;
+    --text-muted: #64748B;
+    --text-subtle: #94A3B8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-icon {
+    width: 30px;
+    height: 30px;
+    background: var(--accent);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .brand-icon svg { color: #fff; }
+  .brand-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+  .brand-name span { color: var(--accent); }
+  .header-meta {
+    font-size: 12px;
+    color: var(--text-subtle);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .live-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #22C55E;
+    animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem 2rem;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--live-light);
+    border: 1px solid #BFDBFE;
+    color: #1E40AF;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 1.25rem;
+  }
+  .hero-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    margin: 0 0 1rem;
+  }
+  .hero-title em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .hero-sub {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  /* ── Main Layout ── */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 2rem auto 4rem;
+    padding: 0 2rem;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .sidebar { order: -1; }
+  }
+
+  /* ── Map Container ── */
+  .map-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: visible;
+  }
+  .map-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+  .map-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .map-subtitle { font-size: 12px; color: var(--text-subtle); margin-top: 2px; }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .legend-swatch {
+    width: 10px; height: 10px;
+    border-radius: 3px;
+  }
+  .legend-swatch.live { background: var(--live); }
+  .legend-swatch.pending { background: var(--pending); }
+
+  /* ── SVG Map ── */
+  #india-map {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .state-path {
+    cursor: pointer;
+    transition: fill 0.18s ease, opacity 0.18s ease;
+    stroke: #FFFFFF;
+    stroke-width: 0.8;
+    stroke-linejoin: round;
+  }
+  .state-path.live-state {
+    fill: var(--live);
+  }
+  .state-path.pending-state {
+    fill: var(--pending);
+  }
+  .state-path.live-state:hover {
+    fill: var(--live-hover);
+    opacity: 0.85;
+  }
+  .state-path.pending-state:hover {
+    fill: #64748B;
+  }
+
+  /* ── Tooltip ── */
+  #tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: var(--text);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 7px;
+    white-space: nowrap;
+    z-index: 9999;
+    display: none;
+    letter-spacing: 0.01em;
+  }
+  #tooltip.live-tip { background: var(--live); }
+  #tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: var(--text);
+  }
+  #tooltip.live-tip::after { border-top-color: var(--live); }
+
+  /* ── Sidebar ── */
+  .sidebar { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  /* ── Quick Select ── */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem;
+  }
+  .panel-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+    margin-bottom: 0.875rem;
+  }
+  .state-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.12s ease;
+    text-decoration: none;
+    color: inherit;
+    margin-bottom: 6px;
+  }
+  .state-card:last-child { margin-bottom: 0; }
+  .state-card:hover {
+    background: var(--live-light);
+    transform: translateX(3px);
+  }
+  .state-flag {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: var(--live);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .state-info { flex: 1; min-width: 0; }
+  .state-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .state-meta { font-size: 11.5px; color: var(--text-subtle); margin-top: 1px; }
+  .state-arrow {
+    color: var(--text-subtle);
+    font-size: 14px;
+    transition: color 0.15s ease, transform 0.15s ease;
+  }
+  .state-card:hover .state-arrow {
+    color: var(--accent);
+    transform: translateX(2px);
+  }
+
+  /* ── Stats ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .stat-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .stat-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+  .stat-label { font-size: 11px; color: var(--text-subtle); margin-top: 4px; font-weight: 500; }
+
+  /* ── Footer ── */
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-subtle);
+    background: var(--surface);
+  }
+  .site-footer a { color: var(--accent); text-decoration: none; }
+  .site-footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<!-- Tooltip -->
+<div id="tooltip"></div>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="header-brand">
+    <div class="brand-icon">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+    </div>
+    <span class="brand-name">Election <span>Data Hub</span></span>
+  </div>
+  <div class="header-meta">
+    <span class="live-dot"></span>
+    <span>5 states live &middot; Data via MyNeta</span>
+  </div>
+</header>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-eyebrow">
+    <svg width="10" height="10" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
+    State Assembly Financial Tracker
+  </div>
+  <h1 class="hero-title">Who funds your <em>elected representatives?</em></h1>
+  <p class="hero-sub">Explore declared bank accounts, assets, and loans of State Legislative Assembly candidates across India. Sourced from affidavit filings on MyNeta.</p>
+</div>
+
+<!-- Main Content -->
+<div class="main-layout">
+
+  <!-- Map -->
+  <div class="map-card">
+    <div class="map-header">
+      <div>
+        <div class="map-title">Interactive Map of India</div>
+        <div class="map-subtitle">Click any state to explore its candidate data</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-swatch live"></div>
+          Live data
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch pending"></div>
+          Coming soon
+        </div>
+      </div>
+    </div>
+
+    <svg id="india-map" viewBox="60 20 520 560" xmlns="http://www.w3.org/2000/svg">
+      <!-- 
+        India SVG Map — simplified representative paths for all states & UTs.
+        Each path has data-state (name) and data-code (2-letter routing code).
+        Live states: TN, KL, WB, AS, PY
+      -->
+
+      <!-- Jammu & Kashmir -->
+      <path class="state-path pending-state" data-state="Jammu & Kashmir" data-code="JK"
+        d="M175 30 L200 25 L230 35 L255 45 L260 65 L245 80 L230 90 L210 85 L195 70 L180 55 Z"/>
+      <!-- Ladakh -->
+      <path class="state-path pending-state" data-state="Ladakh" data-code="LA"
+        d="M255 30 L300 22 L340 35 L350 55 L335 75 L310 80 L280 72 L260 65 Z"/>
+      <!-- Himachal Pradesh -->
+      <path class="state-path pending-state" data-state="Himachal Pradesh" data-code="HP"
+        d="M210 85 L230 90 L250 95 L255 115 L240 125 L220 120 L205 108 Z"/>
+      <!-- Punjab -->
+      <path class="state-path pending-state" data-state="Punjab" data-code="PB"
+        d="M178 90 L200 88 L210 100 L205 120 L188 125 L170 115 L168 100 Z"/>
+      <!-- Uttarakhand -->
+      <path class="state-path pending-state" data-state="Uttarakhand" data-code="UK"
+        d="M255 115 L280 110 L295 120 L292 140 L275 148 L258 140 L252 128 Z"/>
+      <!-- Haryana -->
+      <path class="state-path pending-state" data-state="Haryana" data-code="HR"
+        d="M188 125 L210 120 L225 130 L222 150 L205 158 L188 150 L182 138 Z"/>
+      <!-- Delhi -->
+      <path class="state-path pending-state" data-state="Delhi" data-code="DL"
+        d="M213 142 L222 138 L228 148 L220 158 L212 154 Z"/>
+      <!-- Uttar Pradesh -->
+      <path class="state-path pending-state" data-state="Uttar Pradesh" data-code="UP"
+        d="M228 120 L295 118 L330 130 L340 155 L325 178 L295 185 L268 180 L240 168 L225 155 L225 135 Z"/>
+      <!-- Rajasthan -->
+      <path class="state-path pending-state" data-state="Rajasthan" data-code="RJ"
+        d="M148 130 L190 125 L225 135 L225 175 L210 200 L190 215 L165 215 L140 205 L128 180 L132 155 Z"/>
+      <!-- Bihar -->
+      <path class="state-path pending-state" data-state="Bihar" data-code="BR"
+        d="M330 140 L368 135 L388 148 L385 172 L365 182 L340 178 L325 165 Z"/>
+      <!-- Sikkim -->
+      <path class="state-path pending-state" data-state="Sikkim" data-code="SK"
+        d="M370 128 L382 125 L388 134 L380 142 L371 138 Z"/>
+      <!-- Arunachal Pradesh -->
+      <path class="state-path pending-state" data-state="Arunachal Pradesh" data-code="AR"
+        d="M382 105 L440 100 L470 112 L465 135 L440 142 L405 138 L388 128 Z"/>
+      <!-- Nagaland -->
+      <path class="state-path pending-state" data-state="Nagaland" data-code="NL"
+        d="M445 140 L465 135 L472 150 L460 162 L445 158 L438 148 Z"/>
+      <!-- Manipur -->
+      <path class="state-path pending-state" data-state="Manipur" data-code="MN"
+        d="M450 162 L468 158 L475 172 L465 185 L450 182 L442 172 Z"/>
+      <!-- Mizoram -->
+      <path class="state-path pending-state" data-state="Mizoram" data-code="MZ"
+        d="M448 185 L462 182 L468 196 L458 208 L445 205 L440 194 Z"/>
+      <!-- Tripura -->
+      <path class="state-path pending-state" data-state="Tripura" data-code="TR"
+        d="M432 185 L445 182 L448 196 L438 205 L425 200 L424 190 Z"/>
+      <!-- Meghalaya -->
+      <path class="state-path pending-state" data-state="Meghalaya" data-code="ML"
+        d="M390 165 L420 162 L432 172 L428 185 L408 188 L390 180 Z"/>
+      <!-- Assam — LIVE -->
+      <path class="state-path live-state" data-state="Assam" data-code="AS"
+        d="M388 148 L430 142 L448 152 L445 165 L430 172 L408 168 L390 162 L383 155 Z"/>
+      <!-- West Bengal — LIVE -->
+      <path class="state-path live-state" data-state="West Bengal" data-code="WB"
+        d="M360 178 L390 172 L395 190 L388 215 L378 238 L362 248 L348 240 L342 220 L345 200 L352 185 Z"/>
+      <!-- Jharkhand -->
+      <path class="state-path pending-state" data-state="Jharkhand" data-code="JH"
+        d="M325 185 L365 180 L370 200 L360 218 L345 222 L328 215 L318 200 Z"/>
+      <!-- Odisha -->
+      <path class="state-path pending-state" data-state="Odisha" data-code="OR"
+        d="M328 218 L362 215 L370 235 L368 260 L352 272 L335 268 L318 255 L312 238 Z"/>
+      <!-- Chhattisgarh -->
+      <path class="state-path pending-state" data-state="Chhattisgarh" data-code="CT"
+        d="M268 188 L325 185 L330 215 L325 245 L305 258 L285 258 L268 245 L258 225 L260 205 Z"/>
+      <!-- Madhya Pradesh -->
+      <path class="state-path pending-state" data-state="Madhya Pradesh" data-code="MP"
+        d="M190 195 L268 188 L280 205 L278 235 L260 248 L230 252 L200 245 L180 228 L178 210 Z"/>
+      <!-- Gujarat -->
+      <path class="state-path pending-state" data-state="Gujarat" data-code="GJ"
+        d="M118 195 L155 192 L178 210 L175 238 L160 255 L140 265 L115 262 L95 248 L90 225 L100 208 Z"/>
+      <!-- Maharashtra -->
+      <path class="state-path pending-state" data-state="Maharashtra" data-code="MH"
+        d="M178 232 L260 228 L280 245 L278 272 L258 290 L230 300 L200 300 L175 285 L158 268 L158 250 Z"/>
+      <!-- Telangana -->
+      <path class="state-path pending-state" data-state="Telangana" data-code="TG"
+        d="M260 272 L310 265 L322 285 L315 308 L295 318 L270 315 L252 298 L250 280 Z"/>
+      <!-- Andhra Pradesh -->
+      <path class="state-path pending-state" data-state="Andhra Pradesh" data-code="AP"
+        d="M298 308 L340 295 L362 310 L368 335 L355 355 L330 362 L305 355 L285 338 L282 318 Z"/>
+      <!-- Goa -->
+      <path class="state-path pending-state" data-state="Goa" data-code="GA"
+        d="M165 305 L182 300 L188 312 L178 322 L163 318 Z"/>
+      <!-- Karnataka -->
+      <path class="state-path pending-state" data-state="Karnataka" data-code="KA"
+        d="M185 302 L258 295 L280 315 L285 345 L270 368 L245 378 L218 378 L195 365 L178 345 L175 320 Z"/>
+      <!-- Kerala — LIVE -->
+      <path class="state-path live-state" data-state="Kerala" data-code="KL"
+        d="M218 380 L248 375 L260 395 L255 420 L242 445 L228 460 L215 455 L205 435 L205 408 Z"/>
+      <!-- Tamil Nadu — LIVE -->
+      <path class="state-path live-state" data-state="Tamil Nadu" data-code="TN"
+        d="M252 370 L295 358 L322 375 L328 400 L318 428 L300 450 L275 462 L255 455 L245 435 L248 405 Z"/>
+      <!-- Puducherry — LIVE (small, on east coast near TN) -->
+      <path class="state-path live-state" data-state="Puducherry" data-code="PY"
+        d="M305 405 L318 400 L322 412 L312 420 L302 416 Z"/>
+
+      <!-- ── Union Territories (small) ── -->
+      <!-- Chandigarh -->
+      <path class="state-path pending-state" data-state="Chandigarh" data-code="CH"
+        d="M202 120 L210 118 L212 126 L204 128 Z"/>
+      <!-- Dadra & Nagar Haveli and Daman & Diu -->
+      <path class="state-path pending-state" data-state="Dadra & Nagar Haveli" data-code="DN"
+        d="M155 265 L165 262 L168 272 L158 275 Z"/>
+      <!-- Lakshadweep (in sea, west) -->
+      <path class="state-path pending-state" data-state="Lakshadweep" data-code="LD"
+        d="M130 430 L136 428 L138 434 L132 436 Z"/>
+      <!-- Andaman & Nicobar -->
+      <path class="state-path pending-state" data-state="Andaman & Nicobar" data-code="AN"
+        d="M500 340 L505 335 L510 345 L507 355 L500 358 L496 350 Z"/>
+      <!-- Daman (tiny near Gujarat coast) -->
+      <!-- Merged into DN above -->
+
+    </svg>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+
+    <!-- Stats -->
+    <div class="panel">
+      <div class="panel-label">Coverage</div>
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-val">5</div>
+          <div class="stat-label">States live</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">28+</div>
+          <div class="stat-label">States indexed</div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-val">4,000+</div>
+          <div class="stat-label">Candidates</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">MyNeta</div>
+          <div class="stat-label">Data source</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Select -->
+    <div class="panel">
+      <div class="panel-label">Quick select — live states</div>
+
+      <a class="state-card" href="./dashboard/index.html?state=TN">
+        <div class="state-flag">TN</div>
+        <div class="state-info">
+          <div class="state-name">Tamil Nadu</div>
+          <div class="state-meta">234 constituencies · 2026 elections</div>
+        </div>
+        <svg class="state-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+      <a class="state-card" href="./dashboard/index.html?state=KL">
+        <div class="state-flag">KL</div>
+        <div class="state-info">
+          <div class="state-name">Kerala</div>
+          <div class="state-meta">140 constituencies · 2021 elections</div>
+        </div>
+        <svg class="state-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+      <a class="state-card" href="./dashboard/index.html?state=WB">
+        <div class="state-flag">WB</div>
+        <div class="state-info">
+          <div class="state-name">West Bengal</div>
+          <div class="state-meta">294 constituencies · 2021 elections</div>
+        </div>
+        <svg class="state-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+      <a class="state-card" href="./dashboard/index.html?state=AS">
+        <div class="state-flag">AS</div>
+        <div class="state-info">
+          <div class="state-name">Assam</div>
+          <div class="state-meta">126 constituencies · 2021 elections</div>
+        </div>
+        <svg class="state-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+      <a class="state-card" href="./dashboard/index.html?state=PY">
+        <div class="state-flag">PY</div>
+        <div class="state-info">
+          <div class="state-name">Puducherry</div>
+          <div class="state-meta">30 constituencies · 2021 elections</div>
+        </div>
+        <svg class="state-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <!-- Source note -->
+    <div class="panel" style="padding: 1rem;">
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <svg width="15" height="15" fill="none" stroke="#64748B" stroke-width="1.8" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <p style="font-size:12px;color:var(--text-muted);margin:0;line-height:1.6;">
+          Financial data is sourced from candidate affidavits filed with Election Commissions and aggregated via <strong style="color:var(--text);">MyNeta</strong>. All figures are self-declared and unverified.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <p>Built with data from <a href="https://myneta.info" target="_blank" rel="noopener">MyNeta</a> &amp; the Election Commission of India &middot; For research &amp; civic transparency purposes only</p>
+</footer>
+
+<script>
+(function () {
+  const tooltip = document.getElementById('tooltip');
+  const LIVE_STATES = new Set(['TN','KL','WB','AS','PY']);
+  const DASHBOARD_BASE = './dashboard/index.html';
+
+  function showTooltip(e, name, isLive) {
+    tooltip.textContent = isLive ? `${name} — View data →` : `${name} — Coming soon`;
+    tooltip.style.display = 'block';
+    tooltip.className = isLive ? 'live-tip' : '';
+    moveTooltip(e);
+  }
+
+  function moveTooltip(e) {
+    const x = e.clientX;
+    const y = e.clientY;
+    tooltip.style.left = (x - tooltip.offsetWidth / 2) + 'px';
+    tooltip.style.top = (y - tooltip.offsetHeight - 14) + 'px';
+  }
+
+  function hideTooltip() {
+    tooltip.style.display = 'none';
+  }
+
+  document.querySelectorAll('.state-path').forEach(function (path) {
+    const stateName = path.dataset.state;
+    const stateCode = path.dataset.code;
+    const isLive = LIVE_STATES.has(stateCode);
+
+    path.addEventListener('mouseenter', function (e) {
+      showTooltip(e, stateName, isLive);
+    });
+    path.addEventListener('mousemove', moveTooltip);
+    path.addEventListener('mouseleave', hideTooltip);
+
+    path.addEventListener('click', function () {
+      window.location.href = DASHBOARD_BASE + '?state=' + stateCode;
+    });
+  });
+})();
+</script>
+</body>
+</html>
