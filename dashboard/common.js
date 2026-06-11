@@ -182,6 +182,8 @@ function buildSidebar(activePage, currentDataMeta) {
   ];
 
   const icons = {
+    // Added the new home icon here
+    home: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
     grid: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`,
     map: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
     user: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`,
@@ -193,10 +195,22 @@ function buildSidebar(activePage, currentDataMeta) {
 
   return `<nav class="sidebar">
     <div class="sb-brand">
-      <div class="sb-badge">${config.badge}</div>
-      <div class="sb-title">Election Finance<br>Dashboard</div>
+      <!-- 1. The Badge is now a clickable anchor tag pointing to the hub -->
+      <a class="sb-badge" href="../hub.html" style="display: inline-block; text-decoration: none; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1" title="Return to India Map Hub">
+        ${config.badge} ↩
+      </a>
+      <div class="sb-title" style="margin-top: 8px;">Election Finance<br>Dashboard</div>
       <div class="sb-sub">${m.total_candidates.toLocaleString()} candidates · ${config.seats}</div>
     </div>
+    
+    <!-- 2. The New Dedicated Navigation Section -->
+    <div class="sb-section">
+      <div class="sb-label">Navigation</div>
+      <a class="nav-item" href="../hub.html">
+        ${icons.home} India Map Hub
+      </a>
+    </div>
+
     <div class="sb-section">
       <div class="sb-label">Overview</div>
       ${pages.slice(0, 1).map(p => `<a class="nav-item${activePage === p.id ? ' active' : ''}" href="${p.href}">${icons[p.icon]}${p.label}</a>`).join('')}
