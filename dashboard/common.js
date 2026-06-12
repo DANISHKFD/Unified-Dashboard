@@ -1,5 +1,9 @@
 const STATE_META = {
   TN: { badge: 'Tamil Nadu 2026', subtitle: 'Tamil Nadu Legislative Assembly Election 2026', seats: '234 seats' },
+  AP: { badge: 'Andhra Pradesh 2024', subtitle: 'Andhra Pradesh Legislative Assembly Election 2024', seats: '175 seats' },
+  BR: { badge: 'Bihar 2025', subtitle: 'Bihar Legislative Assembly Election 2025', seats: '243 seats' },
+  MH: { badge: 'Maharashtra 2024', subtitle: 'Maharashtra Legislative Assembly Election 2024', seats: '288 seats' },
+  UP: { badge: 'Uttar Pradesh 2022', subtitle: 'Uttar Pradesh Legislative Assembly Election 2022', seats: '403 seats' },
   KL: { badge: 'Keralam 2026', subtitle: 'Keralam Legislative Assembly Election 2026', seats: '140 seats' },
   WB: { badge: 'West Bengal 2026', subtitle: 'West Bengal Legislative Assembly Election 2026', seats: '294 seats' },
   AS: { badge: 'Assam 2026', subtitle: 'Assam Legislative Assembly Election 2026', seats: '126 seats' },
