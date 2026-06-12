@@ -67,7 +67,8 @@ function renderTable(){
   document.getElementById('tbody').innerHTML=list.map((p,i)=>{
     const net=p.deposits-p.loans;
     const pc=partyColor(p.name);
-    return `<tr onclick="window.location.href='candidates.html?party='+encodeURIComponent('${escJ(p.name)}')+'&state=${STATE_CODE}'>
+    const rowHref = `candidates.html?party=${encodeURIComponent(p.name)}&state=${STATE_CODE}`;
+    return `<tr onclick="window.location.href='${rowHref}'">
       <td class="rank-cell">${i+1}</td>
       <td class="name-cell"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${pc};margin-right:7px;vertical-align:middle"></span>${escH(p.name)}</td>
       <td class="num">${p.candidates}</td>
