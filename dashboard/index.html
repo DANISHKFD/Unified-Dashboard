@@ -74,7 +74,7 @@ function init(){
 function renderTopConsts(){
   const top=TN.constituencies.slice(0,10);
   document.getElementById('top-consts').innerHTML=top.map((c,i)=>`
-    <a class="cand-row" href="constituency.html?name=${encodeURIComponent(c.key)}">
+    <a class="cand-row" href="constituency.html?name=${encodeURIComponent(c.key)}&state=${STATE_CODE}">
       <div style="width:22px;text-align:center;font-size:11px;font-weight:700;color:var(--t3);flex-shrink:0">${i+1}</div>
       <div class="cand-info"><div class="cand-name">${escH(c.name)}</div><div class="cand-meta">${c.candidates} candidates</div></div>
       <div class="cand-amt"><div class="cand-dep">${fmtShort(c.deposits)}</div>${c.loans>0?`<div class="cand-loan">−${fmtShort(c.loans)}</div>`:''}</div>
@@ -115,7 +115,7 @@ function renderPartyChart(){
 function renderTopCands(){
   const top=TN.candidates.slice(0,10);
   document.getElementById('top-cands-dep').innerHTML=top.map((c,i)=>`
-    <a class="cand-row" href="candidate.html?key=${encodeURIComponent(c.key)}">
+    <a class="cand-row" href="candidate.html?key=${encodeURIComponent(c.key)}&state=${STATE_CODE}">
       <div class="cand-avatar" style="background:${avatarColor(c.key)}">${initials(c.key)}</div>
       <div class="cand-info"><div class="cand-name">${escH(c.key)}</div><div class="cand-meta"><span class="ppill" style="background:${partyColor(c.party)}22;color:${partyColor(c.party)}">${escH(c.party)}</span> · ${escH(c.constituency)}</div></div>
       <div class="cand-amt"><div class="cand-dep">${fmtShort(c.deposits)}</div>${c.loans>0?`<div class="cand-loan">−${fmtShort(c.loans)}</div>`:''}</div>
@@ -126,7 +126,7 @@ function renderTopCands(){
   // Grab the top 10 from the globally fixed TN.candidates array
   const top = TN.candidates.slice(0, 10);
   document.getElementById('top-cands-dep').innerHTML = top.map((c, i) => `
-    <a class="cand-row" href="candidate.html?key=${encodeURIComponent(c.key)}">
+    <a class="cand-row" href="candidate.html?key=${encodeURIComponent(c.key)}&state=${STATE_CODE}">
       <div class="cand-avatar" style="background:${avatarColor(c.key)}">${initials(c.key)}</div>
       <div class="cand-info">
         <div class="cand-name">${escH(c.key)}</div>
@@ -174,7 +174,7 @@ function renderModalCands(){
   else cands.sort((a, b) => a.name.localeCompare(b.name));
 
   document.getElementById('modal-cands').innerHTML = cands.map(c => `
-    <a class="cand-row" href="candidate.html?key=${encodeURIComponent(c.key)}">
+    <a class="cand-row" href="candidate.html?key=${encodeURIComponent(c.key)}&state=${STATE_CODE}">
       <div class="cand-avatar" style="background:${avatarColor(c.key)}">${initials(c.key)}</div>
       <div class="cand-info">
         <div class="cand-name">${escH(c.key)}</div>

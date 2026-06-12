@@ -237,5 +237,8 @@ function buildTopbar(title, sub) {
 }
 
 function globalSearch(q) {
-  if (q.length > 1) window.location.href = 'candidates.html?q=' + encodeURIComponent(q);
+  if (q.length > 1) {
+    const stateCode = getStateCode();
+    window.location.href = `candidates.html?state=${stateCode}&q=` + encodeURIComponent(q);
+  }
 }

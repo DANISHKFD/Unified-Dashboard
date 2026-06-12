@@ -23,6 +23,7 @@
 </head><body>
 <div class="app" id="app"></div>
 <script>
+const STATE_CODE = (new URLSearchParams(window.location.search).get('state') || 'TN').toUpperCase();
 const PAGE_SIZE=50;let curPage=0;let filtered=[];
 
 function init(){
@@ -94,7 +95,7 @@ function renderTable(){
   const page=filtered.slice(start,end);
   document.getElementById('count-lbl').textContent=`Showing ${start+1}–${Math.min(end,filtered.length)} of ${filtered.length.toLocaleString()} candidates`;
   document.getElementById('tbody').innerHTML=page.map((c,i)=>`
-    <tr onclick="window.location.href='candidate.html?key='+encodeURIComponent('${escJ(c.key)}')">
+    <tr onclick="window.location.href='candidate.html?key='+encodeURIComponent('${escJ(c.key)}')+'&state=${STATE_CODE}'">
       <td class="rank-cell">${start+i+1}</td>
       <td class="name-cell">${escH(c.key)}</td>
       <td><span class="ppill" style="background:${partyColor(c.party)}22;color:${partyColor(c.party)}">${escH(c.party)}</span></td>

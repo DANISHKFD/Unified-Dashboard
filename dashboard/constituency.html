@@ -24,6 +24,7 @@
 </head><body>
 <div class="app" id="app"></div>
 <script>
+const STATE_CODE = (new URLSearchParams(window.location.search).get('state') || 'TN').toUpperCase();
 const params=new URLSearchParams(location.search);
 const constName=decodeURIComponent(params.get('name')||'');
 const constData=TN.constituencies.find(c=>c.name===constName)||{name:constName,deposits:0,loans:0,net:0,candidates:0};
@@ -34,7 +35,7 @@ function init(){
   <div class="main">
     ${buildTopbar(escH(constName),'Constituency Detail')}
     <div class="content">
-      <a class="back-btn" href="constituencies.html">← All Constituencies</a>
+      <a class="back-btn" href="constituencies.html?state=${STATE_CODE}">← All Constituencies</a>
       <!-- HERO STATS -->
       <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
         <div class="stat-card blue"><div class="s-label">Total Deposits</div><div class="s-value">${fmtShort(constData.deposits)}</div><div class="s-meta">All candidates combined</div></div>
@@ -89,7 +90,7 @@ function renderCands(){
   else list.sort((a,b)=>a.name.localeCompare(b.name));
   document.getElementById('cand-count').textContent=`Showing ${list.length} candidates`;
   document.getElementById('cand-list').innerHTML=list.map(c=>`
-    <a class="cand-row" href="candidate.html?key=${encodeURIComponent(c.key)}">
+    <a class="cand-row" href="candidate.html?key=${encodeURIComponent(c.key)}&state=${STATE_CODE}">
       <div class="cand-avatar" style="background:${avatarColor(c.key)}">${initials(c.key)}</div>
       <div class="cand-info">
         <div class="cand-name">${escH(c.key)}</div>

@@ -34,6 +34,7 @@
   </div>
 </div>
 <script>
+const STATE_CODE = (new URLSearchParams(window.location.search).get('state') || 'TN').toUpperCase();
 let curBank=null;
 function init(){
   document.getElementById('app').innerHTML=buildSidebar('banks')+`
@@ -107,7 +108,7 @@ function renderModalCands(){
   document.getElementById('m-cands').innerHTML=cands.length===0?
     '<p style="color:var(--t3);text-align:center;padding:24px">No candidate data found for this bank.</p>':
     cands.map(c=>`
-      <a class="cand-row" href="candidate.html?key=${encodeURIComponent(c.key)}">
+      <a class="cand-row" href="candidate.html?key=${encodeURIComponent(c.key)}&state=${STATE_CODE}">
         <div class="cand-avatar" style="background:${avatarColor(c.key)}">${initials(c.key)}</div>
         <div class="cand-info">
           <div class="cand-name">${escH(c.key)}</div>

@@ -23,6 +23,7 @@
 </head><body>
 <div class="app" id="app"></div>
 <script>
+const STATE_CODE = (new URLSearchParams(window.location.search).get('state') || 'TN').toUpperCase();
 function init(){
   document.getElementById('app').innerHTML=buildSidebar('constituencies')+`
   <div class="main">
@@ -58,10 +59,10 @@ function render(){
   else if(sort==='net_asc') list.sort((a,b)=>a.net-b.net);
   else if(sort==='name') list.sort((a,b)=>a.name.localeCompare(b.name));
   else if(sort==='candidates') list.sort((a,b)=>b.candidates-a.candidates);
-  document.getElementById('count-label').textContent=`${list.length} of 234 constituencies`;
+  document.getElementById('count-label').textContent=`${list.length} of ${TN.constituencies.length} constituencies`;
   const netColor=n=>n>=0?'var(--green)':'var(--red)';
   document.getElementById('grid').innerHTML=list.map(c=>`
-    <div class="const-card" onclick="window.location.href='constituency.html?name='+encodeURIComponent('${escJ(c.name)}')">
+    <div class="const-card" onclick="window.location.href='constituency.html?name='+encodeURIComponent('${escJ(c.name)}')+'&state=${STATE_CODE}'">
       <div class="const-name">${escH(c.name)}</div>
       <div class="const-dep">${fmtShort(c.deposits)}</div>
       ${c.loans>0?`<div class="const-loan">Loans: ${fmtShort(c.loans)}</div>`:'<div style="height:16px"></div>'}

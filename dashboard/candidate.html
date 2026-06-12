@@ -23,6 +23,7 @@
 </head><body>
 <div class="app" id="app"></div>
 <script>
+const STATE_CODE = (new URLSearchParams(window.location.search).get('state') || 'TN').toUpperCase();
 const params = new URLSearchParams(location.search);
 const key = decodeURIComponent(params.get('key') || '');
 
@@ -52,7 +53,7 @@ function init() {
   const depAccs = TN.cand_accounts[key] || [];
   const loanAccs = TN.cand_loans[key] || [];
   const partyC = partyColor(cand.party);
-  const backHref = fromConst ? `constituency.html?name=${encodeURIComponent(fromConst)}` : 'candidates.html';
+  const backHref = fromConst ? `constituency.html?name=${encodeURIComponent(fromConst)}&state=${STATE_CODE}` : `candidates.html?state=${STATE_CODE}`;
   const backLabel = fromConst ? `← ${fromConst}` : '← All Candidates';
 
   // Group accounts by bank
