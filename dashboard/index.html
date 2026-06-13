@@ -38,6 +38,7 @@
   </div>
 </div>
 <script>
+const STATE_CODE = (new URLSearchParams(window.location.search).get('state') || 'TN').toUpperCase();
 let currentBank=null;
 
 function init(){

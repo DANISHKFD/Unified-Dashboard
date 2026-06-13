@@ -1,5 +1,6 @@
 const STATE_META = {
   TN: { badge: 'Tamil Nadu 2026', subtitle: 'Tamil Nadu Legislative Assembly Election 2026', seats: '234 seats' },
+  TS: { badge: 'Telangana 2026', subtitle: 'Telangana Legislative Assembly Election 2026', seats: '119 seats' },
   AP: { badge: 'Andhra Pradesh 2024', subtitle: 'Andhra Pradesh Legislative Assembly Election 2024', seats: '175 seats' },
   BR: { badge: 'Bihar 2025', subtitle: 'Bihar Legislative Assembly Election 2025', seats: '243 seats' },
   MH: { badge: 'Maharashtra 2024', subtitle: 'Maharashtra Legislative Assembly Election 2024', seats: '288 seats' },
@@ -200,7 +201,7 @@ function buildSidebar(activePage, currentDataMeta) {
   return `<nav class="sidebar">
     <div class="sb-brand">
       <!-- 1. The Badge is now a clickable anchor tag pointing to the hub -->
-      <a class="sb-badge" href="../hub.html" style="display: inline-block; text-decoration: none; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1" title="Return to India Map Hub">
+      <a class="sb-badge" href="../hub.html" style="display: inline-block; text-decoration: none; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1" title="Homepage">
         ${config.badge} ↩
       </a>
       <div class="sb-title" style="margin-top: 8px;">Election Finance<br>Dashboard</div>
@@ -211,7 +212,7 @@ function buildSidebar(activePage, currentDataMeta) {
     <div class="sb-section">
       <div class="sb-label">Navigation</div>
       <a class="nav-item" href="../hub.html">
-        ${icons.home} India Map Hub
+        ${icons.home} Homepage
       </a>
     </div>
 
