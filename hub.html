@@ -368,7 +368,7 @@
   </div>
   <div class="header-meta">
     <span class="live-dot"></span>
-    <span>9 states live &middot; Data via MyNeta</span>
+    <span>11 states and UT live &middot; Data via MyNeta</span>
   </div>
 </header>
 
@@ -454,8 +454,8 @@
       <div class="panel-label">Coverage</div>
       <div class="stats-row">
         <div class="stat-box">
-          <div class="stat-val">9</div>
-          <div class="stat-label">States live</div>
+          <div class="stat-val">11</div>
+          <div class="stat-label">States and UT live</div>
         </div>
         <div class="stat-box">
           <div class="stat-val">28+</div>
@@ -483,6 +483,54 @@
         <div class="state-info">
           <div class="state-name">Tamil Nadu</div>
           <div class="state-meta">234 constituencies · 2026 elections</div>
+        </div>
+        <svg class="state-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a class="state-card" href="./dashboard/index.html?state=TS">
+        <div class="state-flag">TS</div>
+        <div class="state-info">
+          <div class="state-name">Telangana</div>
+          <div class="state-meta">119 constituencies · 2023 elections</div>
+        </div>
+        <svg class="state-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a class="state-card" href="./dashboard/index.html?state=GA">
+        <div class="state-flag">GA</div>
+        <div class="state-info">
+          <div class="state-name">Goa</div>
+          <div class="state-meta">40 constituencies · 2022 elections</div>
+        </div>
+        <svg class="state-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a class="state-card" href="./dashboard/index.html?state=UP">
+        <div class="state-flag">UP</div>
+        <div class="state-info">
+          <div class="state-name">Uttar Pradesh</div>
+          <div class="state-meta">403 constituencies · 2022 elections</div>
+        </div>
+        <svg class="state-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a class="state-card" href="./dashboard/index.html?state=MH">
+        <div class="state-flag">MH</div>
+        <div class="state-info">
+          <div class="state-name">Maharashtra</div>
+          <div class="state-meta">288 constituencies · 2024 elections</div>
+        </div>
+        <svg class="state-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a class="state-card" href="./dashboard/index.html?state=AP">
+        <div class="state-flag">AP</div>
+        <div class="state-info">
+          <div class="state-name">Andhra Pradesh</div>
+          <div class="state-meta">175 constituencies · 2024 elections</div>
+        </div>
+        <svg class="state-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a class="state-card" href="./dashboard/index.html?state=BR">
+        <div class="state-flag">BR</div>
+        <div class="state-info">
+          <div class="state-name">Bihar</div>
+          <div class="state-meta">243 constituencies · 2025 elections</div>
         </div>
         <svg class="state-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
@@ -548,7 +596,7 @@
   const DASHBOARD_BASE = './dashboard/index.html';
   
   // The 10 states you currently have data for
-  const LIVE_STATES = new Set(['TN','KL','WB','AS','PY','MH','UP','AP','BR','TS']);
+  const LIVE_STATES = new Set(['TN','KL','WB','AS','PY','MH','UP','AP','BR','TS','GA']);
 
   // Complete dictionary to translate standard map IDs into beautiful tooltip names
   const STATE_NAMES = {
