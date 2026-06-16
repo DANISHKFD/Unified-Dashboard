@@ -1,5 +1,6 @@
 const STATE_META = {
   TN: { badge: 'Tamil Nadu 2026', subtitle: 'Tamil Nadu Legislative Assembly Election 2026', seats: '234 seats' },
+  KA: { badge: 'Karnataka 2023', subtitle: 'Karnataka Legislative Assembly Election 2023', seats: '226 seats' },
   TS: { badge: 'Telangana 2023', subtitle: 'Telangana Legislative Assembly Election 2023', seats: '119 seats' },
   GA: { badge: 'Goa 2022', subtitle: 'Goa Legislative Assembly Election 2022', seats: '40 seats' },
   AP: { badge: 'Andhra Pradesh 2024', subtitle: 'Andhra Pradesh Legislative Assembly Election 2024', seats: '175 seats' },
